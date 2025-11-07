@@ -1,4 +1,4 @@
-package com.melo.backend.model;
+package com.melo.backend.infrastructure.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,6 +44,6 @@ public class User {
     @NotNull
     @NotBlank
     @Size(min = 8)
-    private transient String password;
+    private String password;
 
 }
