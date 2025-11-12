@@ -27,4 +27,22 @@ public class UserService {
 
         return userRepository.save(userToRegister);
     }
+
+    public User registerUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public User getById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public User deleteByEmail(Long id) {
+        User deleted = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.deleteById(id);
+        return deleted;
+    }
 }
