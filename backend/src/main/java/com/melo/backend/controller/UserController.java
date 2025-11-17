@@ -41,6 +41,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Update parcial
+     */
     @PatchMapping("/{id}")
     public ResponseEntity<User> updateUserById(@PathVariable Long id, @RequestBody UserUpdateDTO dto) {
         return ResponseEntity.ok(userService.updateById(id, dto));
