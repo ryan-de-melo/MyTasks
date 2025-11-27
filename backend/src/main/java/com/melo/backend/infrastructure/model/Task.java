@@ -1,77 +1,82 @@
 package com.melo.backend.infrastructure.model;
 
+import java.time.Instant;
+
 import com.melo.backend.infrastructure.enums.TaskPriority;
 import com.melo.backend.infrastructure.enums.TaskStatus;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+// import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-//import lombok.NoArgsConstructor; -- consertar
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "tasks")
-@Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
 @Setter
 public class Task {
-
-    public Task() {
-        //TODO Auto-generated constructor stub
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     
     @NotBlank
-    @NotNull
-    @NotEmpty
-    @Size(min = 5, max = 255)
+    @Column(nullable = false)
     private String title;
 
     @NotBlank
-    @NotNull
-    @NotEmpty
-    @Size(min = 1, max = 1024)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    // alterar para formato real de data e hora
-    @NotBlank
-    @NotNull
-    @NotEmpty
-    @Size(min = 5, max = 255)
-    private String dateAndHour;
+    @Column(nullable = false, updatable = false)
+    private Instant createdAt;
 
-    @NotBlank
+    @Column(nullable = false)
+    private Instant updatedAt;
+
+    private Instant deadline;
+
     @NotNull
-    @NotEmpty
-    @Size(min = 5, max = 255)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TaskStatus status;
 
-    @NotBlank
     @NotNull
-    @NotEmpty
-    @Size(min = 5, max = 255)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TaskPriority priority;
 
-    /**
-     * Foreign key to user
-     */
-    @NotBlank
-    @NotNull
-    @NotEmpty
-    private Long fk_user_id;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = Instant.now();
+        updatedAt = Instant.now();
+    }
 
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = Instant.now();
+    }
 }
