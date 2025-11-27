@@ -6,8 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.melo.backend.dto.UserRegisterDTO;
-import com.melo.backend.dto.UserUpdateDTO;
+import com.melo.backend.dto.user.UserRegisterDTO;
+import com.melo.backend.dto.user.UserUpdateDTO;
 import com.melo.backend.infrastructure.model.User;
 import com.melo.backend.infrastructure.repository.UserRepository;
 
@@ -90,12 +90,8 @@ public class UserService {
         if (dto.name() != null && !dto.name().isEmpty()) {
             toUpdate.setName(dto.name());
         }
-        if (dto.email() != null && !dto.email().isEmpty()) {
-            if (userRepository.existsByEmail(dto.email())) {
-                throw new IllegalArgumentException("Email already in use");
-            } else {
-                toUpdate.setEmail(dto.email());
-            }
+        if (dto.password() != null && !dto.password().isEmpty()) {
+                toUpdate.setEmail(dto.password());
         }
         
         return toUpdate; // O EntityManager faz um update automaticamente

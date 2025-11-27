@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.melo.backend.business.UserService;
-import com.melo.backend.dto.UserRegisterDTO;
-import com.melo.backend.dto.UserUpdateDTO;
+import com.melo.backend.dto.user.UserRegisterDTO;
+import com.melo.backend.dto.user.UserUpdateDTO;
 import com.melo.backend.infrastructure.model.User;
 
 @RestController
