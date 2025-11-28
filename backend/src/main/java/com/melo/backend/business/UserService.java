@@ -1,8 +1,6 @@
 package com.melo.backend.business;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +15,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder encoder;
+    //@Autowired
+    //private PasswordEncoder encoder;
 
     /**
      * Singup
@@ -30,7 +28,8 @@ public class UserService {
 
         toRegister.setName(dto.name());
         toRegister.setEmail(dto.email());
-        toRegister.setPassword(encoder.encode(dto.password()));
+        //toRegister.setPassword(encoder.encode(dto.password()));
+        toRegister.setPassword(dto.password());
 
         return userRepository.save(toRegister);
     }
