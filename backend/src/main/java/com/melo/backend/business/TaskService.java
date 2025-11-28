@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.melo.backend.dto.TaskAddDTO;
-import com.melo.backend.dto.TaskUpdateDTO;
+import com.melo.backend.infrastructure.dto.TaskAddDTO;
+import com.melo.backend.infrastructure.dto.TaskUpdateDTO;
 import com.melo.backend.infrastructure.model.Task;
 import com.melo.backend.infrastructure.repository.TaskRepository;
 

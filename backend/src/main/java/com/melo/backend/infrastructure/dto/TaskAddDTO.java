@@ -1,4 +1,4 @@
-package com.melo.backend.dto;
+package com.melo.backend.infrastructure.dto;
 
 import java.time.Instant;
 

@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.melo.backend.dto.user.UserRegisterDTO;
-import com.melo.backend.dto.user.UserUpdateDTO;
+import com.melo.backend.infrastructure.dto.user.UserRegisterDTO;
+import com.melo.backend.infrastructure.dto.user.UserUpdateDTO;
 import com.melo.backend.infrastructure.model.User;
 import com.melo.backend.infrastructure.repository.UserRepository;
 

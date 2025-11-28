@@ -1,4 +1,4 @@
-package com.melo.backend.dto.user;
+package com.melo.backend.infrastructure.dto.user;
 
 public record UserResponseDTO(
     Long id,

@@ -1,7 +1,6 @@
-version: "3.9"
+# version: "3.9"     specifying the version is not recommended by Docker
 
 services:
-  # --- Banco de dados PostgreSQL ---
   db:
     image: postgres:16
     container_name: postgres_db
@@ -12,11 +11,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5432:54s32"
     networks:
       - task-network
 
-  # --- Backend (Spring Boot + Java 21) ---
   backend:
     build: ./backend
     container_name: backend_app
@@ -32,7 +30,6 @@ services:
     networks:
       - task-network
 
-  # --- Frontend (React) ---
   frontend:
     build: ./frontend
     container_name: frontend_app
@@ -41,16 +38,13 @@ services:
     ports:
       - "3000:3000"
     environment:
-      # URL que o React usará para chamar o backend dentro da rede Docker
       REACT_APP_API_URL: http://backend:8080
     networks:
       - task-network
 
-# Volume persistente para o banco
 volumes:
   postgres_data:
 
-# Rede compartilhada entre os serviços
 networks:
   task-network:
     driver: bridge

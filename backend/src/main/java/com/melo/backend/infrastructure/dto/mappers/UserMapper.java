@@ -1,7 +1,7 @@
-package com.melo.backend.dto.mappers;
+package com.melo.backend.infrastructure.dto.mappers;
 
-import com.melo.backend.dto.user.UserRegisterDTO;
-import com.melo.backend.dto.user.UserResponseDTO;
+import com.melo.backend.infrastructure.dto.user.UserRegisterDTO;
+import com.melo.backend.infrastructure.dto.user.UserResponseDTO;
 import com.melo.backend.infrastructure.model.User;
 
 public class UserMapper {

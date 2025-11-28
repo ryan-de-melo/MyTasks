@@ -84,3 +84,20 @@ frontend/.env.*.local
 docker-compose.override.yml
 *.bak
 *.tmp
+
+# maven
+/.mvn/wrapper/maven-wrapper.jar
+.gradle/
+/out/
+
+node_modules/
+dist/
+build/
+.env
+.cache/
+
+node_modules/
+dist/
+build/
+.env
+.cache/
