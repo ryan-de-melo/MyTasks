@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.melo.backend.business.UserService;
 import com.melo.backend.infrastructure.dto.user.UserRegisterDTO;
+import com.melo.backend.infrastructure.dto.user.UserResponseDTO;
 import com.melo.backend.infrastructure.dto.user.UserUpdateDTO;
-import com.melo.backend.infrastructure.model.User;
 
 @RestController
 @RequestMapping("/api/user")
@@ -26,12 +26,12 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<User> registerUser(@RequestBody UserRegisterDTO dto) {
+    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRegisterDTO dto) {
         return ResponseEntity.ok(userService.registerUser(dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getById(id));
     }
 
@@ -45,7 +45,7 @@ public class UserController {
      * Update parcial
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<User> updateUserById(@PathVariable Long id, @RequestBody UserUpdateDTO dto) {
+    public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable Long id, @RequestBody UserUpdateDTO dto) {
         return ResponseEntity.ok(userService.updateById(id, dto));
     }
 

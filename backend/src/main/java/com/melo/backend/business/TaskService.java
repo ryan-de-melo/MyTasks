@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.melo.backend.infrastructure.dto.TaskAddDTO;
-import com.melo.backend.infrastructure.dto.TaskUpdateDTO;
+import com.melo.backend.infrastructure.dto.mappers.TaskMapper;
+import com.melo.backend.infrastructure.dto.task.TaskAddDTO;
+import com.melo.backend.infrastructure.dto.task.TaskResponseDTO;
+import com.melo.backend.infrastructure.dto.task.TaskUpdateDTO;
 import com.melo.backend.infrastructure.model.Task;
 import com.melo.backend.infrastructure.repository.TaskRepository;
 
@@ -16,7 +18,7 @@ public class TaskService {
     @Autowired
     private TaskRepository repository;
 
-    public Task addTask(TaskAddDTO dto) {
+    public TaskResponseDTO addTask(TaskAddDTO dto) {
         Task toAdd = new Task();
 
         toAdd.setTitle(dto.title());
@@ -26,24 +28,24 @@ public class TaskService {
         toAdd.setUser(dto.user());
         toAdd.setDeadline(dto.deadline());
 
-        return repository.save(toAdd);
+        return TaskMapper.toResponse(repository.save(toAdd));
     }
 
-    public Task deleteById(Long id) {
+    public TaskResponseDTO deleteById(Long id) {
         Task deleted = repository.findById(id).orElseThrow(
             () -> new RuntimeException("Task not found")
         );
         repository.deleteById(id);
-        return deleted;
+        return TaskMapper.toResponse(deleted);
     }
 
-    public Task getById(Long id) {
-        return repository.findById(id).orElseThrow(
+    public TaskResponseDTO getById(Long id) {
+        return TaskMapper.toResponse(repository.findById(id).orElseThrow(
             () -> new RuntimeException("Task not found")
-        );
+        ));
     }
 
-    public Task updateById(Long id, TaskUpdateDTO dto) {
+    public TaskResponseDTO updateById(Long id, TaskUpdateDTO dto) {
         Task toUpdate = repository.findById(id).orElseThrow(
             () -> new RuntimeException("ERROR")
         );
@@ -61,10 +63,10 @@ public class TaskService {
             toUpdate.setStatus(dto.status());
         }
 
-        return toUpdate;
+        return TaskMapper.toResponse(toUpdate);
     }
 
-    public List<Task> getAll() {
-        return repository.findAll();
+    public List<TaskResponseDTO> getAll() {
+        return repository.findAll().stream().map(TaskResponseDTO :: new).toList();
     }
 }

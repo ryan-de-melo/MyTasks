@@ -1,4 +1,4 @@
-package com.melo.backend.infrastructure.dto;
+package com.melo.backend.infrastructure.dto.task;
 
 import com.melo.backend.infrastructure.enums.TaskPriority;
 import com.melo.backend.infrastructure.enums.TaskStatus;

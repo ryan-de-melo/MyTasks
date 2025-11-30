@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.melo.backend.infrastructure.dto.mappers.UserMapper;
 import com.melo.backend.infrastructure.dto.user.UserRegisterDTO;
+import com.melo.backend.infrastructure.dto.user.UserResponseDTO;
 import com.melo.backend.infrastructure.dto.user.UserUpdateDTO;
 import com.melo.backend.infrastructure.model.User;
 import com.melo.backend.infrastructure.repository.UserRepository;
@@ -23,7 +25,7 @@ public class UserService {
      * @param dto
      * @return
      */
-    public User registerUser(UserRegisterDTO dto) {
+    public UserResponseDTO registerUser(UserRegisterDTO dto) {
         User toRegister = new User();
 
         toRegister.setName(dto.name());
@@ -31,7 +33,7 @@ public class UserService {
         //toRegister.setPassword(encoder.encode(dto.password()));
         toRegister.setPassword(dto.password());
 
-        return userRepository.save(toRegister);
+        return UserMapper.toResponse(userRepository.save(toRegister));
     }
 
     /**
@@ -40,10 +42,10 @@ public class UserService {
      * @return
      * @throws RuntimeException Runtime exception if user is not found.
      */
-    public User getById(Long id) throws RuntimeException {
-        return userRepository.findById(id).orElseThrow(
+    public UserResponseDTO getById(Long id) throws RuntimeException {
+        return UserMapper.toResponse(userRepository.findById(id).orElseThrow(
             () -> new RuntimeException("User not found")
-        );
+        ));
     }
 
     /**
@@ -52,10 +54,10 @@ public class UserService {
      * @return
      * @throws RuntimeException Runtime exception if user is not found.
      */
-    public User getByEmail(String email) throws RuntimeException {
-        return userRepository.findByEmail(email).orElseThrow(
+    public UserResponseDTO getByEmail(String email) throws RuntimeException {
+        return UserMapper.toResponse(userRepository.findByEmail(email).orElseThrow(
             () -> new RuntimeException("User not found")
-        );
+        ));
     }
 
     /**
@@ -64,12 +66,12 @@ public class UserService {
      * @return 
      * @throws RuntimeException Runtime exception if user is not found.
      */
-    public User deleteById(Long id) throws RuntimeException {
+    public UserResponseDTO deleteById(Long id) throws RuntimeException {
         User deleted = userRepository.findById(id).orElseThrow(
             () -> new RuntimeException("User not found")
         );
         userRepository.deleteById(id);
-        return deleted;
+        return UserMapper.toResponse(deleted);
     }
 
     /**
@@ -81,7 +83,7 @@ public class UserService {
      * @throws IllegalArgumentException Illegal argument exception if email is already in use.
      */
     @Transactional
-    public User updateById(Long id, UserUpdateDTO dto) throws RuntimeException, IllegalArgumentException {
+    public UserResponseDTO updateById(Long id, UserUpdateDTO dto) throws RuntimeException, IllegalArgumentException {
         User toUpdate = userRepository.findById(id).orElseThrow(
             () -> new RuntimeException("User not found")
         );
@@ -93,7 +95,7 @@ public class UserService {
                 toUpdate.setEmail(dto.password());
         }
         
-        return toUpdate; // O EntityManager faz um update automaticamente
+        return UserMapper.toResponse(toUpdate); // O EntityManager faz um update automaticamente
     }
 }
 
