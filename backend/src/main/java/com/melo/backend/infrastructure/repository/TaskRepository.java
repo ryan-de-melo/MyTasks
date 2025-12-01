@@ -14,7 +14,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findByTitle(String title);
 
     @Query("""
-            SELECT new com.melo.backend.infrastructure.dto.task.UserTaskDTO(
+            SELECT new com.melo.backend.infrastructure.dto.dbprojections.UserTaskDTO(
                 u.name,
                 t.title
             ) 
