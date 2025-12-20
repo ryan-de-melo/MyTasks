@@ -41,8 +41,8 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TaskResponseDTO> updateTaskById(@PathVariable Long id, @RequestBody TaskUpdateDTO dto) {
-        return ResponseEntity.ok(service.updateById(id, dto));
+    public ResponseEntity<TaskResponseDTO> partialUpdateTaskById(@PathVariable Long id, @RequestBody TaskUpdateDTO dto) {
+        return ResponseEntity.ok(service.partialUpdateById(id, dto));
     }
 
     @GetMapping

@@ -83,7 +83,7 @@ public class UserService {
      * @throws IllegalArgumentException Illegal argument exception if email is already in use.
      */
     @Transactional
-    public UserResponseDTO updateById(Long id, UserUpdateDTO dto) throws RuntimeException, IllegalArgumentException {
+    public UserResponseDTO partialUpdateById(Long id, UserUpdateDTO dto) throws RuntimeException, IllegalArgumentException {
         User toUpdate = userRepository.findById(id).orElseThrow(
             () -> new RuntimeException("User not found")
         );

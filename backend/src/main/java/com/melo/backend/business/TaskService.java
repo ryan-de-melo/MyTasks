@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.melo.backend.infrastructure.dto.mappers.TaskMapper;
 import com.melo.backend.infrastructure.dto.task.TaskAddDTO;
@@ -48,7 +49,8 @@ public class TaskService {
         ));
     }
 
-    public TaskResponseDTO updateById(Long id, TaskUpdateDTO dto) {
+    @Transactional
+    public TaskResponseDTO partialUpdateById(Long id, TaskUpdateDTO dto) {
         Task toUpdate = repository.findById(id).orElseThrow(
             () -> new RuntimeException("ERROR")
         );
