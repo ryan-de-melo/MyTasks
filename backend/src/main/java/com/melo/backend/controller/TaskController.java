@@ -19,7 +19,7 @@ import com.melo.backend.infrastructure.dto.task.TaskResponseDTO;
 import com.melo.backend.infrastructure.dto.task.TaskUpdateDTO;
 
 @RestController
-@RequestMapping("/api/task")
+@RequestMapping("/api/tasks")
 public class TaskController {
 
     @Autowired
