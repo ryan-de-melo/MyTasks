@@ -97,5 +97,17 @@ public class UserService {
         
         return UserMapper.toResponse(toUpdate); // O EntityManager faz um update automaticamente
     }
+
+    /**
+     * Method to return an entity of user.
+     * This is used only to "convert" dto into a user
+     * @param id user id
+     * @return user entity
+     */
+    protected User getUserEntityById(Long id) {
+        return userRepository.findById(id).orElseThrow(
+            () -> new RuntimeException("User not found")
+        );
+    }
 }
 

@@ -18,6 +18,9 @@ public class TaskService {
     @Autowired
     private TaskRepository repository;
 
+    @Autowired
+    private UserService userService;
+
     public TaskResponseDTO addTask(TaskAddDTO dto) {
         Task toAdd = new Task();
 
@@ -25,7 +28,7 @@ public class TaskService {
         toAdd.setDescription(dto.description());
         toAdd.setPriority(dto.priority());
         toAdd.setStatus(dto.status());
-        toAdd.setUser(dto.user());
+        toAdd.setUser(userService.getUserEntityById(dto.userId()));
         toAdd.setDeadline(dto.deadline());
 
         return TaskMapper.toResponse(repository.save(toAdd));
