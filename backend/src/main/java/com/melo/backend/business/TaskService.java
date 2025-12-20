@@ -50,10 +50,10 @@ public class TaskService {
             () -> new RuntimeException("ERROR")
         );
 
-        if (dto.title() != null && dto.title().isEmpty()) {
+        if (dto.title() != null && !dto.title().isEmpty()) {
             toUpdate.setTitle(dto.title());
         }
-        if (dto.description() != null && dto.description().isEmpty()) {
+        if (dto.description() != null && !dto.description().isEmpty()) {
             toUpdate.setDescription(dto.description());
         }
         if (dto.priority() != null) {
