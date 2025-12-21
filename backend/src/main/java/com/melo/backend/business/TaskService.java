@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.melo.backend.infrastructure.dto.mappers.TaskMapper;
 import com.melo.backend.infrastructure.dto.task.TaskAddDTO;
@@ -18,6 +19,9 @@ public class TaskService {
     @Autowired
     private TaskRepository repository;
 
+    @Autowired
+    private UserService userService;
+
     public TaskResponseDTO addTask(TaskAddDTO dto) {
         Task toAdd = new Task();
 
@@ -25,7 +29,7 @@ public class TaskService {
         toAdd.setDescription(dto.description());
         toAdd.setPriority(dto.priority());
         toAdd.setStatus(dto.status());
-        toAdd.setUser(dto.user());
+        toAdd.setUser(userService.getUserEntityById(dto.userId()));
         toAdd.setDeadline(dto.deadline());
 
         return TaskMapper.toResponse(repository.save(toAdd));
@@ -45,15 +49,16 @@ public class TaskService {
         ));
     }
 
-    public TaskResponseDTO updateById(Long id, TaskUpdateDTO dto) {
+    @Transactional
+    public TaskResponseDTO partialUpdateById(Long id, TaskUpdateDTO dto) {
         Task toUpdate = repository.findById(id).orElseThrow(
             () -> new RuntimeException("ERROR")
         );
 
-        if (dto.title() != null && dto.title().isEmpty()) {
+        if (dto.title() != null && !dto.title().isEmpty()) {
             toUpdate.setTitle(dto.title());
         }
-        if (dto.description() != null && dto.description().isEmpty()) {
+        if (dto.description() != null && !dto.description().isEmpty()) {
             toUpdate.setDescription(dto.description());
         }
         if (dto.priority() != null) {

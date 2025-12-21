@@ -19,7 +19,7 @@ import com.melo.backend.infrastructure.dto.task.TaskResponseDTO;
 import com.melo.backend.infrastructure.dto.task.TaskUpdateDTO;
 
 @RestController
-@RequestMapping("/api/task")
+@RequestMapping("/api/tasks")
 public class TaskController {
 
     @Autowired
@@ -41,8 +41,8 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TaskResponseDTO> updateTaskById(@PathVariable Long id, @RequestBody TaskUpdateDTO dto) {
-        return ResponseEntity.ok(service.updateById(id, dto));
+    public ResponseEntity<TaskResponseDTO> partialUpdateTaskById(@PathVariable Long id, @RequestBody TaskUpdateDTO dto) {
+        return ResponseEntity.ok(service.partialUpdateById(id, dto));
     }
 
     @GetMapping

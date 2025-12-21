@@ -4,7 +4,6 @@ import java.time.Instant;
 
 import com.melo.backend.infrastructure.enums.TaskPriority;
 import com.melo.backend.infrastructure.enums.TaskStatus;
-import com.melo.backend.infrastructure.model.User;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,13 +18,13 @@ public record TaskAddDTO(
     String description,
 
     @NotNull
-    TaskPriority priority,
+    TaskPriority priority,     // Is HIGH, MEDIUM, LOW
 
     @NotNull
-    TaskStatus status,
+    TaskStatus status,         // Is DO, DOING, DONE
 
     @NotNull
-    User user,
+    Long userId,
 
     Instant deadline
 ) {}
