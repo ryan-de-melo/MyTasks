@@ -1,5 +1,7 @@
+import CreateTaskPage from "./pages/CreateTaskPage";
+
 function App() {
-  return <h1>MyTasks</h1>;
+  return <CreateTaskPage />;
 }
 
 export default App;
