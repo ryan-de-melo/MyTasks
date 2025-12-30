@@ -1,5 +1,6 @@
 package com.melo.backend.controller;
 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,11 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable Long id, @RequestBody UserUpdateDTO dto) {
         return ResponseEntity.ok(userService.partialUpdateById(id, dto));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAll());
     }
 
 }

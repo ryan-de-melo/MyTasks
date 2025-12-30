@@ -1,5 +1,7 @@
 package com.melo.backend.business;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,6 +110,10 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(
             () -> new RuntimeException("User not found")
         );
+    }
+
+    public List<UserResponseDTO> getAll() {
+        return userRepository.findAll().stream().map(UserResponseDTO :: new).toList();
     }
 }
 
