@@ -10,7 +10,7 @@ function CreateTaskPage() {
     status: "DO",
     userId: 1,
     deadlineDate: "",
-    deadlineTime: null,
+    deadlineTime: "",
   });
 
   function handleChange(event) {
@@ -21,10 +21,18 @@ function CreateTaskPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
+    let deadline = null;
+
+    if (form.deadlineDate && form.deadlineTime) {
+      deadline = new Date(
+        `${form.deadlineDate}T${form.deadlineTime}`
+      ).toISOString();
+    }
+
     try {
       await createTask({
         ...form,
-        deadline: form.deadline ? new Date(form.deadline).toISOString() : null,
+        deadline,
       });
 
       alert("Success");
