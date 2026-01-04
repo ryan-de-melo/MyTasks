@@ -3,6 +3,8 @@ package com.melo.backend.business;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.melo.backend.infrastructure.dto.auth.AuthResponseDTO;
+import com.melo.backend.infrastructure.dto.user.UserLoginDTO;
 import com.melo.backend.infrastructure.dto.user.UserRegisterDTO;
 import com.melo.backend.infrastructure.model.User;
 import com.melo.backend.infrastructure.repository.UserRepository;
@@ -36,4 +38,16 @@ public class AuthService {
         userRepository.save(user);
     }
 
+    public AuthResponseDTO login(UserLoginDTO dto) {
+        User user = userRepository.findByEmail(dto.email())
+                                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        if (!encoder.matches(dto.password(), user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        String token = jwtService.generateToken(user);
+
+        return new AuthResponseDTO(token);
+    }
 }
