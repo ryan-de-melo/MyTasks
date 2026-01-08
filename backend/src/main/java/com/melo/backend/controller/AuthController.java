@@ -24,13 +24,13 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/api/register")
+    @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid UserRegisterDTO dto) {
         authService.register(dto);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/api/login")
+    @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid UserLoginDTO dto) {
         return ResponseEntity.ok(authService.login(dto));
     }
