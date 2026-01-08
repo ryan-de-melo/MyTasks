@@ -1,6 +1,7 @@
 package com.melo.backend.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,11 +24,13 @@ public class AuthController {
         this.authService = authService;
     }
 
+    @PostMapping("/api/register")
     public ResponseEntity<Void> register(@RequestBody @Valid UserRegisterDTO dto) {
         authService.register(dto);
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/api/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid UserLoginDTO dto) {
         return ResponseEntity.ok(authService.login(dto));
     }
