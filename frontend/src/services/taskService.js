@@ -1,5 +1,5 @@
-import { api } from "./api";
+import api from "./api";
 
 export function createTask(task) {
-    return api.post("/tasks", task);
+    return api.post("/api/tasks", task);
 }
