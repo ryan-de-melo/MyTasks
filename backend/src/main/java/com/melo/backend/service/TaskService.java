@@ -33,7 +33,7 @@ public class TaskService {
      * @return
      */
     @Deprecated
-    public TaskResponseDTO addTask(TaskAddDTO dto) {
+    public TaskResponseDTO addTaskUnsafe(TaskAddDTO dto) {
         Task toAdd = new Task();
 
         toAdd.setTitle(dto.title());
@@ -47,7 +47,7 @@ public class TaskService {
     }
 
     
-    public TaskResponseDTO addTaskAuth(TaskCreateDTO dto) {
+    public TaskResponseDTO addTask(TaskCreateDTO dto) {
         User usr = authUserService.get();
         Task toAdd = Task.builder()
                             .title(dto.title())
@@ -61,18 +61,46 @@ public class TaskService {
         return TaskMapper.toResponse(repository.save(toAdd));
     }
 
-    public TaskResponseDTO deleteById(Long id) {
+    /**
+     * 
+     * @param id
+     * @return
+     */
+    @Deprecated
+    public TaskResponseDTO deleteByIdUnsafe(Long id) {
         Task deleted = repository.findById(id).orElseThrow(
                 () -> new RuntimeException("Task not found"));
         repository.deleteById(id);
         return TaskMapper.toResponse(deleted);
     }
 
+    public TaskResponseDTO deleteById(Long id) {
+        User usr = authUserService.get();
+        Task deleted = repository.findByIdAndUser(id, usr).orElseThrow(
+            () -> new RuntimeException("Not found"));
+
+        repository.delete(deleted);
+        return TaskMapper.toResponse(deleted);
+    }
+
+    /**
+     * 
+     * @param id
+     * @return
+    */
+   @Deprecated
     public TaskResponseDTO getById(Long id) {
         return TaskMapper.toResponse(repository.findById(id).orElseThrow(
                 () -> new RuntimeException("Task not found")));
     }
 
+    /**
+     * 
+     * @param id
+     * @param dto
+     * @return
+     */
+    @Deprecated
     @Transactional
     public TaskResponseDTO partialUpdateById(Long id, TaskUpdateDTO dto) {
         Task toUpdate = repository.findById(id).orElseThrow(
@@ -94,6 +122,11 @@ public class TaskService {
         return TaskMapper.toResponse(toUpdate);
     }
 
+    /**
+     * 
+     * @return
+     */
+    @Deprecated
     public List<TaskResponseDTO> getAll() {
         return repository.findAll().stream().map(TaskResponseDTO::new).toList();
     }
