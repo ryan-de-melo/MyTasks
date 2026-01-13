@@ -31,7 +31,6 @@ public class UserService {
 
         toRegister.setName(dto.name());
         toRegister.setEmail(dto.email());
-        // toRegister.setPassword(encoder.encode(dto.password()));
         toRegister.setPassword(dto.password());
 
         return UserMapper.toResponse(userRepository.save(toRegister));
