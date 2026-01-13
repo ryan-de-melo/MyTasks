@@ -71,8 +71,10 @@ public class UserService {
         return UserMapper.toResponse(deleted);
     }
 
-    public void updateById(Long id, UserUpdateDTO dto) {
+    public UserResponseDTO updateById(Long id, UserUpdateDTO dto) {
         Optional<User> opt = userRepository.findById(id);
+        User u = null;
+
         if (opt.isPresent()) {
             User user = opt.get();
             User updatedUser = User.builder()
@@ -81,8 +83,9 @@ public class UserService {
                     .password(dto.password())
                     .build();
 
-            userRepository.save(updatedUser);
+            u = userRepository.save(updatedUser);
         }
+        return UserMapper.toResponse(u);
     }
 
     /**
