@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.melo.backend.business.TaskService;
-import com.melo.backend.infrastructure.dto.task.TaskAddDTO;
-import com.melo.backend.infrastructure.dto.task.TaskResponseDTO;
-import com.melo.backend.infrastructure.dto.task.TaskUpdateDTO;
+import com.melo.backend.dto.task.TaskAddDTO;
+import com.melo.backend.dto.task.TaskResponseDTO;
+import com.melo.backend.dto.task.TaskUpdateDTO;
+import com.melo.backend.service.TaskService;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController

@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.melo.backend.business.UserService;
-import com.melo.backend.infrastructure.dto.user.UserRegisterDTO;
-import com.melo.backend.infrastructure.dto.user.UserResponseDTO;
-import com.melo.backend.infrastructure.dto.user.UserUpdateDTO;
+import com.melo.backend.dto.user.UserRegisterDTO;
+import com.melo.backend.dto.user.UserResponseDTO;
+import com.melo.backend.dto.user.UserUpdateDTO;
+import com.melo.backend.service.UserService;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController

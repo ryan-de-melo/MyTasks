@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.melo.backend.business.AuthService;
-import com.melo.backend.infrastructure.dto.auth.AuthResponseDTO;
-import com.melo.backend.infrastructure.dto.user.UserLoginDTO;
-import com.melo.backend.infrastructure.dto.user.UserRegisterDTO;
+import com.melo.backend.dto.auth.AuthResponseDTO;
+import com.melo.backend.dto.user.UserLoginDTO;
+import com.melo.backend.dto.user.UserRegisterDTO;
+import com.melo.backend.service.AuthService;
 
 import jakarta.validation.Valid;
 
