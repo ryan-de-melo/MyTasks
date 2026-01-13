@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.melo.backend.entity.Task;
+import com.melo.backend.entity.User;
 import com.melo.backend.repository.dbprojections.UserTaskDTO;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
@@ -22,4 +23,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
                 JOIN t.user u
             """)
     List<UserTaskDTO> findAllUserAndTask();
+
+    Optional<Task> findByIdAndUser(Long id, User user);
 }
