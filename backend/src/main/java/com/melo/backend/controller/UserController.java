@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     @PostMapping
     public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRegisterDTO dto) {
         return ResponseEntity.ok(userService.registerUser(dto));
@@ -44,11 +44,18 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateUserById(@PathVariable Long id, @RequestBody UserUpdateDTO dto) {
+        userService.updateById(id, dto);
+        return ResponseEntity.noContent().build();
+    }
+
     /**
      * Update parcial
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable Long id, @RequestBody UserUpdateDTO dto) {
+    public ResponseEntity<UserResponseDTO> partialUpdateUserById(@PathVariable Long id,
+            @RequestBody UserUpdateDTO dto) {
         return ResponseEntity.ok(userService.partialUpdateById(id, dto));
     }
 
