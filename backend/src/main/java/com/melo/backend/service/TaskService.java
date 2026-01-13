@@ -134,7 +134,7 @@ public class TaskService {
     public List<TaskResponseDTO> getAll() {
         User usr = authUserService.get();
         
-        return repository.findbyUser(usr)
+        return repository.findByUser(usr)
             .stream()
             .map(TaskResponseDTO::new)
             .toList();

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.melo.backend.dto.task.TaskAddDTO;
+import com.melo.backend.dto.task.TaskCreateDTO;
 import com.melo.backend.dto.task.TaskResponseDTO;
 import com.melo.backend.dto.task.TaskUpdateDTO;
 import com.melo.backend.service.TaskService;
@@ -28,7 +28,7 @@ public class TaskController {
     private TaskService service;
 
     @PostMapping
-    public ResponseEntity<TaskResponseDTO> addTask(@RequestBody TaskAddDTO dto) {
+    public ResponseEntity<TaskResponseDTO> addTask(@RequestBody TaskCreateDTO dto) {
         return ResponseEntity.ok(service.addTask(dto));
     }
 
