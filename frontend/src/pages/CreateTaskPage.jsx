@@ -8,7 +8,6 @@ function CreateTaskPage() {
     description: "",
     priority: "LOW",
     status: "DO",
-    userId: 1,
     deadlineDate: "",
     deadlineTime: "",
   });
@@ -117,6 +116,7 @@ function CreateTaskPage() {
           <button
             type="submit"
             className="w-full mt-2 rounded-lg bg-zinc-900 py-2 font-medium text-zinc-100 hover:bg-indigo-600 transition-colors"
+            //onClick={handleSubmit}
           >
             Criar
           </button>
