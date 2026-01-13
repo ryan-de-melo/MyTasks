@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.melo.backend.dto.task.TaskAddDTO;
+import com.melo.backend.dto.task.TaskCreateDTO;
 import com.melo.backend.dto.task.TaskResponseDTO;
 import com.melo.backend.dto.task.TaskUpdateDTO;
 import com.melo.backend.entity.Task;
+import com.melo.backend.entity.User;
 import com.melo.backend.mappers.TaskMapper;
 import com.melo.backend.repository.TaskRepository;
 
@@ -22,6 +24,15 @@ public class TaskService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthenticatedUserService authUserService;
+
+    /**
+     * 
+     * @param dto
+     * @return
+     */
+    @Deprecated
     public TaskResponseDTO addTask(TaskAddDTO dto) {
         Task toAdd = new Task();
 
@@ -35,25 +46,37 @@ public class TaskService {
         return TaskMapper.toResponse(repository.save(toAdd));
     }
 
+    
+    public TaskResponseDTO addTaskAuth(TaskCreateDTO dto) {
+        User usr = authUserService.get();
+        Task toAdd = Task.builder()
+                            .title(dto.title())
+                            .description(dto.description())
+                            .priority(dto.priority())
+                            .status(dto.status())
+                            .user(usr)
+                            .deadline(dto.deadline())
+                            .build();
+        
+        return TaskMapper.toResponse(repository.save(toAdd));
+    }
+
     public TaskResponseDTO deleteById(Long id) {
         Task deleted = repository.findById(id).orElseThrow(
-            () -> new RuntimeException("Task not found")
-        );
+                () -> new RuntimeException("Task not found"));
         repository.deleteById(id);
         return TaskMapper.toResponse(deleted);
     }
 
     public TaskResponseDTO getById(Long id) {
         return TaskMapper.toResponse(repository.findById(id).orElseThrow(
-            () -> new RuntimeException("Task not found")
-        ));
+                () -> new RuntimeException("Task not found")));
     }
 
     @Transactional
     public TaskResponseDTO partialUpdateById(Long id, TaskUpdateDTO dto) {
         Task toUpdate = repository.findById(id).orElseThrow(
-            () -> new RuntimeException("ERROR")
-        );
+                () -> new RuntimeException("ERROR"));
 
         if (dto.title() != null && !dto.title().isEmpty()) {
             toUpdate.setTitle(dto.title());
@@ -72,6 +95,6 @@ public class TaskService {
     }
 
     public List<TaskResponseDTO> getAll() {
-        return repository.findAll().stream().map(TaskResponseDTO :: new).toList();
+        return repository.findAll().stream().map(TaskResponseDTO::new).toList();
     }
 }
