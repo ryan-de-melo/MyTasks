@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -28,7 +29,7 @@ public class UserServiceTest {
     private UserService service;
 
     @Test
-    void createUser() {
+    void testCreateUser() {
         UserRegisterDTO dto = new UserRegisterDTO("test", "test@email.com", "testpassword");
 
         User savedUser = User.builder()
@@ -48,7 +49,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void getUser() {
+    void testGetUserById() {
         User usr = User.builder()
                 .id(Long.valueOf(0))
                 .email("test@email.com")
@@ -59,6 +60,40 @@ public class UserServiceTest {
         when(repo.findById(Long.valueOf(0))).thenReturn(Optional.of(usr));
 
         UserResponseDTO response = service.getById(Long.valueOf(0));
+
+        assertEquals("test@email.com", response.email());
+    }
+
+    @Test
+    void testGetUserByEmail() {
+        User usr = User.builder()
+                .id(Long.valueOf(0))
+                .name("test")
+                .email("test@email.com")
+                .password("testpassword")
+                .build();
+
+        when(repo.findByEmail("test@email.com")).thenReturn(Optional.of(usr));
+
+        UserResponseDTO response = service.getByEmail("test@email.com");
+
+        assertEquals("test@email.com", response.email());
+        assertEquals("test", response.name());
+    }
+
+    @Test
+    void testDeleteById() {
+        User usr = User.builder()
+                .id(Long.valueOf(0))
+                .name("test")
+                .email("test@email.com")
+                .password("testpassword")
+                .build();
+
+        when(repo.findById(Long.valueOf(0))).thenReturn(Optional.of(usr));
+        doNothing().when(repo).deleteById(Long.valueOf(0));
+
+        UserResponseDTO response = service.deleteById(Long.valueOf(0));
 
         assertEquals("test@email.com", response.email());
     }
