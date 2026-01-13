@@ -127,7 +127,16 @@ public class TaskService {
      * @return
      */
     @Deprecated
-    public List<TaskResponseDTO> getAll() {
+    public List<TaskResponseDTO> getAllUnsafe() {
         return repository.findAll().stream().map(TaskResponseDTO::new).toList();
+    }
+
+    public List<TaskResponseDTO> getAll() {
+        User usr = authUserService.get();
+        
+        return repository.findbyUser(usr)
+            .stream()
+            .map(TaskResponseDTO::new)
+            .toList();
     }
 }
