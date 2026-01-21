@@ -54,8 +54,7 @@ public class UserService {
      * @throws RuntimeException Runtime exception if user is not found.
      */
     public UserResponseDTO getByEmail(String email) throws RuntimeException {
-        return UserMapper.toResponse(userRepository.findByEmail(email).orElseThrow(
-                () -> new RuntimeException("User not found")));
+        return UserMapper.toResponse((User) userRepository.findByEmail(email));
     }
 
     /**
