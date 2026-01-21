@@ -1,5 +1,14 @@
 package com.melo.backend.entity;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.melo.backend.entity.enums.UserRole;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +31,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -41,5 +50,26 @@ public class User {
     @NotBlank
     @Size(min = 8)
     private String password;
+
+    private UserRole role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<? extends GrantedAuthority> list;
+
+        if (this.role == UserRole.ADMIN) {
+            list = List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
+                            new SimpleGrantedAuthority("ROLE_USER"));
+        } else {
+            list = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        }
+        return list;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 
 }
