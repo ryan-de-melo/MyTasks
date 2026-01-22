@@ -1,6 +1,6 @@
 package com.melo.backend.dto.auth;
 
-public record AuthLoginDTO(
+public record AuthLoginRequestDTO(
     String email,
     String password
 ) {}
