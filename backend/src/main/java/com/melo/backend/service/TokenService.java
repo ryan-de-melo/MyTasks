@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.melo.backend.entity.User;
 
 @Service
@@ -29,6 +30,26 @@ public class TokenService {
             
             return token;
         } catch (JWTCreationException e) {
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 
+     * @param token token
+     * @return user email or null
+     */
+    public String validateToken(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(SECRET);
+            
+            return JWT.require(algorithm)
+                        .withIssuer("space-shop-api")
+                        .build()
+                        .verify(token)
+                        .getSubject(); 
+        } catch (JWTVerificationException e) {
             System.err.println(e.getMessage());
             return null;
         }
