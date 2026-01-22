@@ -4,13 +4,16 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.melo.backend.dto.user.UserRegisterDTO;
+import com.melo.backend.dto.auth.AuthRegisterRequestDTO;
+import com.melo.backend.dto.auth.AuthRegisterResponseDTO;
 import com.melo.backend.dto.user.UserResponseDTO;
 import com.melo.backend.dto.user.UserUpdateDTO;
 import com.melo.backend.entity.User;
+import com.melo.backend.exception.UserAlreadyExistsException;
 import com.melo.backend.mappers.UserMapper;
 import com.melo.backend.repository.UserRepository;
 
@@ -26,14 +29,23 @@ public class UserService {
      * @param dto
      * @return
      */
-    public UserResponseDTO registerUser(UserRegisterDTO dto) {
-        User toRegister = new User();
+    public AuthRegisterResponseDTO registerUser(AuthRegisterRequestDTO dto) throws UserAlreadyExistsException {
 
-        toRegister.setName(dto.name());
-        toRegister.setEmail(dto.email());
-        toRegister.setPassword(dto.password());
+        if (userRepository.findByEmail(dto.email()) == null) {
 
-        return UserMapper.toResponse(userRepository.save(toRegister));
+            String encryptedPassword = new BCryptPasswordEncoder().encode(dto.password());
+            User toRegister = User.builder()
+                                .email(dto.email())
+                                .name(dto.name())
+                                .password(encryptedPassword)
+                                .role(dto.role())
+                                .build();
+            userRepository.save(toRegister);
+            
+            return new AuthRegisterResponseDTO(dto.name(), dto.email(), dto.role());
+        } else {
+            throw new UserAlreadyExistsException();
+        }
     }
 
     /**
