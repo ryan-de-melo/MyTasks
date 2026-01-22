@@ -25,7 +25,7 @@ public class TaskService {
     private UserService userService;
 
     @Autowired
-    private AuthenticatedUserService authUserService;
+    private AuthenticationService authUserService;
 
     /**
      * 
@@ -48,7 +48,7 @@ public class TaskService {
 
     
     public TaskResponseDTO addTask(TaskCreateDTO dto) {
-        User usr = authUserService.get();
+        User usr = authUserService.getCurrentUser();
         Task toAdd = Task.builder()
                             .title(dto.title())
                             .description(dto.description())
@@ -75,7 +75,7 @@ public class TaskService {
     }
 
     public TaskResponseDTO deleteById(Long id) {
-        User usr = authUserService.get();
+        User usr = authUserService.getCurrentUser();
         Task deleted = repository.findByIdAndUser(id, usr).orElseThrow(
             () -> new RuntimeException("Not found"));
 
@@ -132,7 +132,7 @@ public class TaskService {
     }
 
     public List<TaskResponseDTO> getAll() {
-        User usr = authUserService.get();
+        User usr = authUserService.getCurrentUser();
         
         return repository.findByUser(usr)
             .stream()

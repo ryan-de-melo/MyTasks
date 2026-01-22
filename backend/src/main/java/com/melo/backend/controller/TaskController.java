@@ -32,6 +32,7 @@ public class TaskController {
         return ResponseEntity.ok(service.addTask(dto));
     }
 
+    @SuppressWarnings("deprecation")
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponseDTO> getTaskById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
@@ -42,6 +43,7 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @SuppressWarnings("deprecation")
     @PatchMapping("/{id}")
     public ResponseEntity<TaskResponseDTO> partialUpdateTaskById(@PathVariable Long id, @RequestBody TaskUpdateDTO dto) {
         return ResponseEntity.ok(service.partialUpdateById(id, dto));

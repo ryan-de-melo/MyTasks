@@ -14,11 +14,14 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import com.melo.backend.dto.user.UserRegisterDTO;
+import com.melo.backend.dto.auth.AuthRegisterRequestDTO;
+import com.melo.backend.dto.auth.AuthRegisterResponseDTO;
 import com.melo.backend.dto.user.UserResponseDTO;
 import com.melo.backend.dto.user.UserUpdateDTO;
 import com.melo.backend.entity.User;
+import com.melo.backend.entity.enums.UserRole;
 import com.melo.backend.repository.UserRepository;
 import com.melo.backend.service.UserService;
 
@@ -33,7 +36,7 @@ public class UserServiceTest {
 
     @Test
     void testCreateUser() {
-        UserRegisterDTO dto = new UserRegisterDTO("test", "test@email.com", "testpassword");
+        AuthRegisterRequestDTO dto = new AuthRegisterRequestDTO("test", "test@email.com", "testpassword", UserRole.ADMIN);
 
         User savedUser = User.builder()
                 .id(Long.valueOf(0))
@@ -44,7 +47,7 @@ public class UserServiceTest {
 
         when(repo.save(any(User.class))).thenReturn(savedUser);
 
-        UserResponseDTO response = service.registerUser(dto);
+        AuthRegisterResponseDTO response = service.registerUser(dto);
 
         assertNotNull(response);
         assertEquals("test", response.name());
@@ -76,7 +79,7 @@ public class UserServiceTest {
                 .password("testpassword")
                 .build();
 
-        when(repo.findByEmail("test@email.com")).thenReturn(Optional.of(usr));
+        when(repo.findByEmail("test@email.com")).thenReturn((UserDetails) usr);
 
         UserResponseDTO response = service.getByEmail("test@email.com");
 
@@ -117,9 +120,7 @@ public class UserServiceTest {
 
         service.updateById(Long.valueOf(0), dto);
 
-        verify(repo).save(argThat(user ->
-                                    user.getName().equals("newtest") &&
-                                    user.getPassword().equals("newtestpassword")
-    ));
+        verify(repo).save(argThat(user -> user.getName().equals("newtest") &&
+                user.getPassword().equals("newtestpassword")));
     }
 }

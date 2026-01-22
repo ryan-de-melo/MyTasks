@@ -126,3 +126,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+notes.md

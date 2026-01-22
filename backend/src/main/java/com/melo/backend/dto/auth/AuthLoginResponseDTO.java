@@ -1,5 +1,5 @@
 package com.melo.backend.dto.auth;
 
-public record AuthResponseDTO(
+public record AuthLoginResponseDTO(
     String token
 ) {}
