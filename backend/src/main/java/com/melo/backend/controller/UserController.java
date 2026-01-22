@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.melo.backend.dto.user.UserRegisterDTO;
+import com.melo.backend.dto.auth.AuthRegisterRequestDTO;
 import com.melo.backend.dto.user.UserResponseDTO;
 import com.melo.backend.dto.user.UserUpdateDTO;
 import com.melo.backend.service.UserService;
@@ -29,8 +29,9 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRegisterDTO dto) {
-        return ResponseEntity.ok(userService.registerUser(dto));
+    public ResponseEntity<Void> registerUser(@RequestBody AuthRegisterRequestDTO dto) {
+        userService.registerUser(dto);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
