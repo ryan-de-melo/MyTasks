@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.melo.backend.exception.UserNotFoundException;
 import com.melo.backend.repository.UserRepository;
 import com.melo.backend.service.TokenService;
 
@@ -28,12 +29,14 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+            throws ServletException, IOException, UserNotFoundException {
         String token = recoverToken(request);
         String email = tokenService.validateToken(token);
 
         if (token != null && email != null) {
-            UserDetails user = userRepository.findByEmail(email);
+            UserDetails user = userRepository.findByEmail(email).orElseThrow(
+                () -> new UserNotFoundException()
+            );
 
             if (user != null ) {
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
