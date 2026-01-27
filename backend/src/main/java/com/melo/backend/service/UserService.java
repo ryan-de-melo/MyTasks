@@ -13,6 +13,7 @@ import com.melo.backend.dto.auth.AuthRegisterResponseDTO;
 import com.melo.backend.dto.user.UserResponseDTO;
 import com.melo.backend.dto.user.UserUpdateDTO;
 import com.melo.backend.entity.User;
+import com.melo.backend.entity.enums.UserRole;
 import com.melo.backend.exception.UserAlreadyExistsException;
 import com.melo.backend.mappers.UserMapper;
 import com.melo.backend.repository.UserRepository;
@@ -38,7 +39,7 @@ public class UserService {
                                 .email(dto.email())
                                 .name(dto.name())
                                 .password(encryptedPassword)
-                                .role(dto.role())
+                                .role(UserRole.USER)   // for simplicity
                                 .build();
             userRepository.save(toRegister);
             
