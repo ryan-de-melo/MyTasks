@@ -43,7 +43,7 @@ public class UserService {
                                 .build();
             userRepository.save(toRegister);
             
-            return new AuthRegisterResponseDTO(dto.name(), dto.email(), dto.role());
+            return new AuthRegisterResponseDTO(dto.name(), dto.email());
         } else {
             throw new UserAlreadyExistsException();
         }
