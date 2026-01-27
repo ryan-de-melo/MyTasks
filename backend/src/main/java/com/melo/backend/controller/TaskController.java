@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskResponseDTO> getTaskById(@PathVariable Long id) {
+    public ResponseEntity<TaskDTO> getTaskById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getById(id));
     }
 
@@ -43,10 +44,14 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    @SuppressWarnings("deprecation")
     @PatchMapping("/{id}")
     public ResponseEntity<TaskResponseDTO> partialUpdateTaskById(@PathVariable Long id, @RequestBody TaskUpdateDTO dto) {
         return ResponseEntity.ok(service.partialUpdateById(id, dto));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> updateById(@PathVariable Long id, @RequestBody TaskUpdateDTO dto) {
+        return ResponseEntity.ok(service.updateById(id, dto));
     }
 
     @GetMapping
