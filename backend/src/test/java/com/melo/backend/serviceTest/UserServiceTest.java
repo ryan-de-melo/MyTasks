@@ -78,7 +78,7 @@ public class UserServiceTest {
                 .password("testpassword")
                 .build();
 
-        when(repo.findByEmail("test@email.com")).thenReturn((UserDetails) usr);
+        when(repo.findByEmail("test@email.com")).thenReturn(Optional.of((UserDetails) usr));
 
         UserResponseDTO response = service.getByEmail("test@email.com");
 
