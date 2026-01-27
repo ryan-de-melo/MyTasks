@@ -14,6 +14,7 @@ import com.melo.backend.entity.Task;
 import com.melo.backend.entity.User;
 import com.melo.backend.mappers.TaskMapper;
 import com.melo.backend.repository.TaskRepository;
+import com.melo.backend.repository.dbprojections.TaskDTO;
 
 @Service
 public class TaskService {
@@ -88,7 +89,6 @@ public class TaskService {
      * @param id
      * @return
     */
-   @Deprecated
     public TaskResponseDTO getById(Long id) {
         return TaskMapper.toResponse(repository.findById(id).orElseThrow(
                 () -> new RuntimeException("Task not found")));
@@ -123,12 +123,11 @@ public class TaskService {
     }
 
     /**
-     * 
+     * Return ALL tasks registered in the system
      * @return
      */
-    @Deprecated
-    public List<TaskResponseDTO> getAllUnsafe() {
-        return repository.findAll().stream().map(TaskResponseDTO::new).toList();
+    public List<TaskDTO> getAllUnsafe() {
+        return repository.findAllTasks();
     }
 
     public List<TaskResponseDTO> getAll() {
