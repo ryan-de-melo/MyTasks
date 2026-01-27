@@ -98,6 +98,27 @@ public class TaskService {
         );
     }
 
+
+    public TaskResponseDTO updateById(Long id, TaskUpdateDTO dto) {
+        User usr = authUserService.getCurrentUser();
+
+        Task toUpdate = repository.findByIdAndUser(id, usr).orElseThrow(
+            () -> new TaskNotFoundException()
+        );
+
+        Task newTask = Task.builder()
+                    .id(toUpdate.getId())
+                    .title(dto.title())
+                    .description(dto.description())
+                    .deadline(toUpdate.getDeadline())
+                    .createdAt(toUpdate.getCreatedAt())
+                    .priority(dto.priority())
+                    .status(dto.status())
+                    .build();
+
+        return TaskMapper.toResponse(repository.save(newTask));
+    }
+
     /**
      * 
      * @param id
