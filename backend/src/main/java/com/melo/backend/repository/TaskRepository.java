@@ -66,4 +66,24 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
         """
     )
     List<TaskDTO> findAllTasks();
+
+    @Query(
+        """
+            SELECT new com.melo.backend.repository.dbprojection.TaskDTO(
+                t.title,
+                t.description,
+                t.createdAt,
+                t.updatedAt,
+                t.deadline,
+                t.status,
+                t.priority
+            )
+            FROM
+                Task t
+            WHERE
+                t.id = :taskId
+                AND t.user.id = :userId
+        """
+    )
+    Optional<TaskDTO> findByIdAndUserId(@Param("taskId") Long taskId, @Param("userId") Long userId);
 }
