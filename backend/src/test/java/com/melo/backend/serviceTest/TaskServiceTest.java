@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,6 +37,18 @@ public class TaskServiceTest {
 
     @InjectMocks
     private TaskService service;
+
+    private User userDefault;
+
+    @BeforeAll
+    public void setUp() {
+        userDefault = User.builder()
+                .id(Long.valueOf(0))
+                .email("test@email.com")
+                .name("test")
+                .password("testpassword")
+                .build();
+    }
 
 
     @Test
@@ -80,6 +93,23 @@ public class TaskServiceTest {
 
         assertNotNull(response);
         assertEquals(dto.title(), response.title());
+    }
+
+    @Test
+    void testDeleteTask() {
+        Task savedTask = Task.builder()
+                .id(1L)
+                .title("Teste")
+                .description("testando")
+                .priority(TaskPriority.HIGH)
+                .status(TaskStatus.DOING)
+                .deadline(LocalDateTime.now().plusDays(2).toInstant(ZoneOffset.of("-03:00")))
+                .user(userDefault)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+
+        
     }
 
 }
