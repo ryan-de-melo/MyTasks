@@ -12,8 +12,10 @@ import com.melo.backend.dto.task.TaskResponseDTO;
 import com.melo.backend.dto.task.TaskUpdateDTO;
 import com.melo.backend.entity.Task;
 import com.melo.backend.entity.User;
+import com.melo.backend.exception.TaskNotFoundException;
 import com.melo.backend.mappers.TaskMapper;
 import com.melo.backend.repository.TaskRepository;
+import com.melo.backend.repository.dbprojections.TaskDTO;
 
 @Service
 public class TaskService {
@@ -88,10 +90,33 @@ public class TaskService {
      * @param id
      * @return
     */
-   @Deprecated
-    public TaskResponseDTO getById(Long id) {
-        return TaskMapper.toResponse(repository.findById(id).orElseThrow(
-                () -> new RuntimeException("Task not found")));
+    public TaskDTO getById(Long id) {
+        User usr = authUserService.getCurrentUser();
+
+        return repository.findByIdAndUserId(id, usr.getId()).orElseThrow(
+            () -> new TaskNotFoundException()
+        );
+    }
+
+
+    public TaskResponseDTO updateById(Long id, TaskUpdateDTO dto) {
+        User usr = authUserService.getCurrentUser();
+
+        Task toUpdate = repository.findByIdAndUser(id, usr).orElseThrow(
+            () -> new TaskNotFoundException()
+        );
+
+        Task newTask = Task.builder()
+                    .id(toUpdate.getId())
+                    .title(dto.title())
+                    .description(dto.description())
+                    .deadline(toUpdate.getDeadline())
+                    .createdAt(toUpdate.getCreatedAt())
+                    .priority(dto.priority())
+                    .status(dto.status())
+                    .build();
+
+        return TaskMapper.toResponse(repository.save(newTask));
     }
 
     /**
@@ -102,7 +127,7 @@ public class TaskService {
      */
     @Deprecated
     @Transactional
-    public TaskResponseDTO partialUpdateById(Long id, TaskUpdateDTO dto) {
+    public TaskResponseDTO partialUpdateByIdUnsafe(Long id, TaskUpdateDTO dto) {
         Task toUpdate = repository.findById(id).orElseThrow(
                 () -> new RuntimeException("ERROR"));
 
@@ -122,13 +147,36 @@ public class TaskService {
         return TaskMapper.toResponse(toUpdate);
     }
 
+    @Transactional
+    public TaskResponseDTO partialUpdateById(Long id, TaskUpdateDTO dto) {
+        User usr = authUserService.getCurrentUser();
+        
+        Task toUpdate = repository.findByIdAndUser(id, usr).orElseThrow(
+            () -> new TaskNotFoundException()
+        );
+
+        if (dto.title() != null && !dto.title().isEmpty()) {
+            toUpdate.setTitle(dto.title());
+        }
+        if (dto.description() != null && !dto.description().isEmpty()) {
+            toUpdate.setDescription(dto.description());
+        }
+        if (dto.priority() != null) {
+            toUpdate.setPriority(dto.priority());
+        }
+        if (dto.status() != null) {
+            toUpdate.setStatus(dto.status());
+        }
+
+        return TaskMapper.toResponse(toUpdate);
+    }
+
     /**
-     * 
+     * Return ALL tasks registered in the system
      * @return
      */
-    @Deprecated
-    public List<TaskResponseDTO> getAllUnsafe() {
-        return repository.findAll().stream().map(TaskResponseDTO::new).toList();
+    public List<TaskDTO> getAllUnsafe() {
+        return repository.findAllTasks();
     }
 
     public List<TaskResponseDTO> getAll() {
