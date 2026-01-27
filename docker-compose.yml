@@ -25,6 +25,7 @@ services:
       SPRING_DATASOURCE_USERNAME: task_user
       SPRING_DATASOURCE_PASSWORD: task_pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      API_SECURITY_TOKEN_SECRET: mytaskssupersecretkey
     ports:
       - "8080:8080"
     networks:
