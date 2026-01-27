@@ -15,6 +15,7 @@ import com.melo.backend.dto.user.UserUpdateDTO;
 import com.melo.backend.entity.User;
 import com.melo.backend.entity.enums.UserRole;
 import com.melo.backend.exception.UserAlreadyExistsException;
+import com.melo.backend.exception.UserNotFoundException;
 import com.melo.backend.mappers.UserMapper;
 import com.melo.backend.repository.UserRepository;
 
@@ -43,7 +44,7 @@ public class UserService {
                                 .build();
             userRepository.save(toRegister);
             
-            return new AuthRegisterResponseDTO(dto.name(), dto.email(), dto.role());
+            return new AuthRegisterResponseDTO(dto.name(), dto.email());
         } else {
             throw new UserAlreadyExistsException();
         }
@@ -55,9 +56,9 @@ public class UserService {
      * @return
      * @throws RuntimeException Runtime exception if user is not found.
      */
-    public UserResponseDTO getById(Long id) throws RuntimeException {
+    public UserResponseDTO getById(Long id) throws UserNotFoundException {
         return UserMapper.toResponse(userRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("User not found")));
+                () -> new UserNotFoundException()));
     }
 
     /**
@@ -66,8 +67,10 @@ public class UserService {
      * @return
      * @throws RuntimeException Runtime exception if user is not found.
      */
-    public UserResponseDTO getByEmail(String email) throws RuntimeException {
-        return UserMapper.toResponse((User) userRepository.findByEmail(email));
+    public UserResponseDTO getByEmail(String email) throws UserNotFoundException {
+        return UserMapper.toResponse((User) userRepository.findByEmail(email).orElseThrow(
+            () -> new UserNotFoundException()
+        ));
     }
 
     /**
@@ -76,9 +79,9 @@ public class UserService {
      * @return
      * @throws RuntimeException Runtime exception if user is not found.
      */
-    public UserResponseDTO deleteById(Long id) throws RuntimeException {
+    public UserResponseDTO deleteById(Long id) throws UserNotFoundException {
         User deleted = userRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("User not found"));
+                () -> new UserNotFoundException());
         userRepository.deleteById(id);
         return UserMapper.toResponse(deleted);
     }
@@ -111,9 +114,9 @@ public class UserService {
      */
     @Transactional
     public UserResponseDTO partialUpdateById(Long id, UserUpdateDTO dto)
-            throws RuntimeException, IllegalArgumentException {
+            throws UserNotFoundException {
         User toUpdate = userRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("User not found"));
+                () -> new UserNotFoundException());
 
         if (dto.name() != null && !dto.name().isEmpty()) {
             toUpdate.setName(dto.name());
