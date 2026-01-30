@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,10 +22,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.melo.backend.controller.UserController;
 import com.melo.backend.dto.auth.AuthRegisterRequestDTO;
 import com.melo.backend.dto.auth.AuthRegisterResponseDTO;
-
+import com.melo.backend.security.SecurityConfig;
+import com.melo.backend.security.SecurityFilter;
 import com.melo.backend.service.UserService;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(
+    controllers = UserController.class,
+    excludeAutoConfiguration = {
+        org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class,
+        org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration.class
+    },
+    excludeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        classes = {SecurityFilter.class, SecurityConfig.class}
+    )
+)
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
 
     @Autowired
