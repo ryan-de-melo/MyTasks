@@ -76,12 +76,12 @@ public class TaskService {
         return TaskMapper.toResponse(deleted);
     }
 
-    public TaskResponseDTO deleteById(Long id) {
+    public TaskResponseDTO deleteById(Long id) throws TaskNotFoundException {
         User usr = authUserService.getCurrentUser();
         Task deleted = repository.findByIdAndUser(id, usr).orElseThrow(
-            () -> new RuntimeException("Not found"));
+            () -> new TaskNotFoundException());
 
-        repository.delete(deleted);
+        repository.deleteById(deleted.getId());
         return TaskMapper.toResponse(deleted);
     }
 
