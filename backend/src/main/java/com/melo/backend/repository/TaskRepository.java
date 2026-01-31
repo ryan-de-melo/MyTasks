@@ -30,60 +30,53 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findByUser(User user);
 
-    @Query(
-        """
-            SELECT new com.melo.backend.repository.dbprojection.TaskDTO(
-                t.title,
-                t.description,
-                t.createdAt,
-                t.updatedAt,
-                t.deadline,
-                t.status,
-                t.priority
-            )
-            FROM
-                Task t
-            WHERE
-                t.user.id = :userId
-        """
-    )
+    @Query("""
+                SELECT new com.melo.backend.repository.dbprojections.TaskDTO(
+                    t.title,
+                    t.description,
+                    t.createdAt,
+                    t.updatedAt,
+                    t.deadline,
+                    t.status,
+                    t.priority
+                )
+                FROM
+                    Task t
+                WHERE
+                    t.user.id = :userId
+            """)
     List<TaskDTO> searchByUser(@Param("userId") Long userId);
 
-
-    @Query(
-        """
-            SELECT new com.melo.backend.repository.dbprojection.TaskDTO(
-                t.title,
-                t.description,
-                t.createdAt,
-                t.updatedAt,
-                t.deadline,
-                t.status,
-                t.priority
-            )
-            FROM
-                Task t
-        """
-    )
+    @Query("""
+                SELECT new com.melo.backend.repository.dbprojections.TaskDTO(
+                    t.title,
+                    t.description,
+                    t.createdAt,
+                    t.updatedAt,
+                    t.deadline,
+                    t.status,
+                    t.priority
+                )
+                FROM
+                    Task t
+            """)
     List<TaskDTO> findAllTasks();
 
-    @Query(
-        """
-            SELECT new com.melo.backend.repository.dbprojection.TaskDTO(
-                t.title,
-                t.description,
-                t.createdAt,
-                t.updatedAt,
-                t.deadline,
-                t.status,
-                t.priority
-            )
-            FROM
-                Task t
-            WHERE
-                t.id = :taskId
-                AND t.user.id = :userId
-        """
-    )
+    @Query("""
+                SELECT new com.melo.backend.repository.dbprojections.TaskDTO(
+                    t.title,
+                    t.description,
+                    t.createdAt,
+                    t.updatedAt,
+                    t.deadline,
+                    t.status,
+                    t.priority
+                )
+                FROM
+                    Task t
+                WHERE
+                    t.id = :taskId
+                    AND t.user.id = :userId
+            """)
     Optional<TaskDTO> findByIdAndUserId(@Param("taskId") Long taskId, @Param("userId") Long userId);
 }

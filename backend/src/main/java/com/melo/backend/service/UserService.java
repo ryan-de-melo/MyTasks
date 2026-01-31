@@ -33,7 +33,7 @@ public class UserService {
      */
     public AuthRegisterResponseDTO registerUser(AuthRegisterRequestDTO dto) throws UserAlreadyExistsException {
 
-        if (userRepository.findByEmail(dto.email()) == null) {
+        if (userRepository.findByEmail(dto.email()).isEmpty()) {
 
             String encryptedPassword = new BCryptPasswordEncoder().encode(dto.password());
             User toRegister = User.builder()
