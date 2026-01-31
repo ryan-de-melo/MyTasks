@@ -22,6 +22,25 @@ function ListTaskPage() {
     }
   }
 
+  function getPriorityStyle(priority) {
+    let style = null;
+    switch (priority) {
+        case "HIGH":
+            style = "text-red-400 bg-red-400/10 border-red-400/20";
+            break;
+        case "MEDIUM":
+            style = "text-yellow-400 bg-yellow-400/10 border-yellow-400/20";
+            break;
+        case "LOW":
+            style = "text-green-400 bg-green-400/10 border-green-400/20";
+            break;
+        default:
+            style = "text-zinc-400 bg-zinc-400/10 border-zinc-400/20";
+    }
+
+    return style;
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-900 px-4 py-12">
       <div className="w-full max-w-md bg-zinc-800 rounded-2xl shadow-lg p-6">
@@ -37,6 +56,8 @@ function ListTaskPage() {
                 Nenhuma tarefa encontrada
             </div>
         )}
+
+
 
       </div>
     </div>
