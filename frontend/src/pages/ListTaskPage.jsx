@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { listTasks } from "../services/taskService";
-import { CheckCircle2, Clock, CircleDashed } from "lucide-react";
+import { CheckCircle2, Clock, CircleDashed, Calendar } from "lucide-react";
 
 function ListTaskPage() {
   const [tasks, setTasks] = useState([]);
@@ -30,7 +30,7 @@ function ListTaskPage() {
         style = "text-red-400 bg-red-400/10 border-red-400/20";
         break;
       case "MEDIUM":
-        style = "text-yellow-400 bg-yellow-400/10 border-yellow-400/20";
+        style = "text-yellow-500 bg-orange-400/10 border-orange-400/20";
         break;
       case "LOW":
         style = "text-green-400 bg-green-400/10 border-green-400/20";
@@ -95,7 +95,7 @@ function ListTaskPage() {
     <div className="min-h-screen flex items-center justify-center bg-zinc-900 px-4 py-12">
       <div className="w-full max-w-md bg-zinc-800 rounded-2xl shadow-lg p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-semibold text-zinc-100">My Tasks</h2>
+          <h2 className="text-2xl font-semibold text-zinc-100">MyTasks</h2>
           <span className="text-sm text-zinc-400 bg-zinc-900 px-3 py-1 rounded-full border border-zinc-700">
             Total: {tasks.length}
           </span>
