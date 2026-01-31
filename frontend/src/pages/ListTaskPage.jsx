@@ -41,6 +41,11 @@ function ListTaskPage() {
     return style;
   }
 
+  function getPriorityLabel(priority) {
+    const labels = { HIGH: "Alta", MEDIUM: "Média", LOW: "Baixa"};
+    return labels[priority] || priority;
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-900 px-4 py-12">
       <div className="w-full max-w-md bg-zinc-800 rounded-2xl shadow-lg p-6">
