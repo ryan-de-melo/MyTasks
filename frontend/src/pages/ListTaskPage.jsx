@@ -77,6 +77,20 @@ function ListTaskPage() {
     return formated;
   }
 
+  function getStatusText(status) {
+    let text = null;
+
+    if (status === "DO") {
+      text = "A Fazer";
+    } else if (status === "DOING") {
+      text = "Fazendo";
+    } else {
+      text = "Concluída";
+    }
+
+    return text;
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-900 px-4 py-12">
       <div className="w-full max-w-md bg-zinc-800 rounded-2xl shadow-lg p-6">
@@ -92,6 +106,54 @@ function ListTaskPage() {
             Nenhuma tarefa encontrada
           </div>
         )}
+
+        <div className="space-y-3">
+          {tasks.map((task) => (
+            <div
+              key={task.id}
+              className="group bg-zinc-900 border border-zinc-800 rounded-xl p-4 transition-all hover:border-indigo-600 hover:shadow-md"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-1 flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium text-zinc-100 text-lg">
+                      {task.title}
+                    </h3>
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full border ${getPriorityStyle(task.priority)}`}
+                    >
+                      {getPriorityLabel(task.priority)}
+                    </span>
+                  </div>
+
+                  <p className="text-zinc-400 text-sm leading-relaxed">
+                    {task.description || "Sem descrição"}
+                  </p>
+                </div>
+
+                <div className="bg-zinc-800 p-2 rounded-lg border border-zinc-700">
+                  {getStatusIcon(task.status)}
+                </div>
+              </div>
+
+              <div className="mt-4 flex items-center gap-4 text-xs text-zinc-500 border-t border-zinc-800 pt-3">
+                <div className="flex items-center gap-1.5">
+                  {getStatusIcon(task.status)}
+                  <span className="uppercase tracking-wider font-semibold">
+                    {getStatusText(task.status)}
+                  </span>
+                </div>
+
+                {task.deadline && (
+                  <div className="flex items-center gap-1.5 ml-auto text-zinc-400">
+                    <Calendar size={14} />
+                    <span>{formatDate(task.deadline)}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
