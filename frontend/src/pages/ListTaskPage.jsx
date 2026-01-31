@@ -51,17 +51,30 @@ function ListTaskPage() {
     let icon = null;
 
     switch (status) {
-        case "DONE":
-            icon = <CheckCircle2 size={16} className="text-emerald-500"/>;
-            break;
-        case "DOING":
-            icon = <Clock size={16} className="text-indigo-500" />;
-            break
-        default:
-            icon = <CircleDashed size={16} className="text-zinc-500" />;
+      case "DONE":
+        icon = <CheckCircle2 size={16} className="text-emerald-500" />;
+        break;
+      case "DOING":
+        icon = <Clock size={16} className="text-indigo-500" />;
+        break;
+      default:
+        icon = <CircleDashed size={16} className="text-zinc-500" />;
     }
 
     return icon;
+  }
+
+  function formatDate(dateString) {
+    let formated = null;
+    if (dateString) {
+      formated = new Date(dateString).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+    return formated;
   }
 
   return (
