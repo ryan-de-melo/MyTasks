@@ -7,6 +7,7 @@ import com.melo.backend.entity.enums.TaskPriority;
 import com.melo.backend.entity.enums.TaskStatus;
 
 public record TaskDTO(
+    Long id,
     String title,
     String description,
     Instant createdAt,
@@ -17,6 +18,7 @@ public record TaskDTO(
 ) {
     public TaskDTO(Task task) {
         this(
+            task.getId(),
             task.getTitle(),
             task.getDescription(),
             task.getCreatedAt(),

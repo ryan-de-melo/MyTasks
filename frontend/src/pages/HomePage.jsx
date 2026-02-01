@@ -8,7 +8,7 @@ function HomePage() {
   }
 
   function gotoList() {
-    navigate("/create"); // change to /list  !!!!!
+    navigate("/list");
   }
 
   return (

@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import CreateTaskPage from "./pages/CreateTaskPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import ListTaskPage from "./pages/ListTaskPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { Navigate } from "react-router-dom";
@@ -40,6 +41,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <CreateTaskPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "list",
+        element: (
+          <ProtectedRoute>
+            <ListTaskPage />
           </ProtectedRoute>
         ),
       },

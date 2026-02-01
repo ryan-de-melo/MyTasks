@@ -32,6 +32,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("""
                 SELECT new com.melo.backend.repository.dbprojections.TaskDTO(
+                    t.id,
                     t.title,
                     t.description,
                     t.createdAt,
@@ -49,6 +50,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("""
                 SELECT new com.melo.backend.repository.dbprojections.TaskDTO(
+                    t.id,
                     t.title,
                     t.description,
                     t.createdAt,
@@ -64,6 +66,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("""
                 SELECT new com.melo.backend.repository.dbprojections.TaskDTO(
+                    t.id,
                     t.title,
                     t.description,
                     t.createdAt,

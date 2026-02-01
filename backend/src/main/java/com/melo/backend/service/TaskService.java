@@ -114,6 +114,7 @@ public class TaskService {
                     .createdAt(toUpdate.getCreatedAt())
                     .priority(dto.priority())
                     .status(dto.status())
+                    .user(usr)
                     .build();
 
         return TaskMapper.toResponse(repository.save(newTask));
