@@ -7,8 +7,11 @@ function ListTaskPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(true);
 
-  const [editingId, setEditingId] = useState(null);
+  const [editingTitleId, setEditingTitleId] = useState(null);
+  const [editingDescriptionId, setEditingDescriptionId] = useState(null);
+
   const [titleDraft, setTitleDraft] = useState("");
+  const [descriptionDraft, setDescriptionDraft] = useState("");
 
   useEffect(() => {
     fetchTasks();
@@ -160,13 +163,48 @@ function ListTaskPage() {
   }
 
   function startEditingTitle(task) {
-    setEditingId(task.id);
-    setTitleDraft(task.title);
+    setEditingTitleId(task.id);
+    setTitleDraft(task.title ?? "");
   }
 
-  function cancelEditing() {
-    setEditingId(null);
+  function startEditingDescription(task) {
+    setEditingDescriptionId(task.id);
+    setDescriptionDraft(task.description ?? "");
+  }
+
+  function cancelTitleEditing() {
+    setEditingTitleId(null);
     setTitleDraft("");
+  }
+
+  function cancelEditingDescription() {
+    setEditingDescriptionId(null);
+    setDescriptionDraft("");
+  }
+
+  async function saveDescription(task) {
+    const updatedTask = {
+      id: task.id,
+      title: task.title,
+      description: descriptionDraft,
+      priority: task.priority,
+      status: task.status,
+    };
+
+    try {
+      await editTask(updatedTask);
+
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === task.id ? { ...t, description: descriptionDraft } : t,
+        ),
+      );
+
+      setEditingDescriptionId(null);
+      setDescriptionDraft("");
+    } catch (error) {
+      console.error("Error while updating task", error);
+    }
   }
 
   async function saveTitle(task) {
@@ -180,7 +218,7 @@ function ListTaskPage() {
 
       setTasks((prev) => prev.map((t) => (t.id === task.id ? updatedTask : t)));
 
-      setEditingId(null);
+      setEditingTitleId(null);
     } catch (error) {
       console.error("Error while updating title", error);
     }
@@ -211,14 +249,14 @@ function ListTaskPage() {
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1 flex-1">
                   <div className="flex items-center gap-2">
-                    {editingId === task.id ? (
+                    {editingTitleId === task.id ? (
                       <input
                         value={titleDraft}
                         onChange={(e) => setTitleDraft(e.target.value)}
                         onBlur={() => saveTitle(task)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") saveTitle(task);
-                          if (e.key === "Escape") cancelEditing();
+                          if (e.key === "Escape") cancelTitleEditing();
                         }}
                         autoFocus
                         className="bg-zinc-900 text-zinc-100 text-lg font-medium rounded px-1 outline-none"
@@ -239,15 +277,32 @@ function ListTaskPage() {
                     </button>
                   </div>
 
-                  <p className="text-zinc-400 text-sm leading-relaxed">
-                    {task.description || "Sem descrição"}
-                  </p>
+                  {editingDescriptionId === task.id ? (
+                    <input
+                      value={descriptionDraft}
+                      onChange={(e) => setDescriptionDraft(e.target.value)}
+                      onBlur={() => saveDescription(task)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") saveDescription(task);
+                        if (e.key === "Escape") cancelEditingDescription();
+                      }}
+                      autoFocus
+                      placeholder="Sem descrição"
+                      className="w-full bg-zinc-900 text-zinc-300 text-sm leading-relaxed rounded px-2 py-1 outline-none resize-none"
+                    />
+                  ) : (
+                    <p
+                      onClick={() => startEditingDescription(task)}
+                      className="text-zinc-400 text-sm leading-relaxed cursor-pointer"
+                    >
+                      {task.description || "Sem descrição"}
+                    </p>
+                  )}
                 </div>
 
                 <button
                   onClick={() => handleToggleStatus(task)}
-                  className="bg-zinc-800 p-2 rounded-lg border border-zinc-700
-             hover:bg-zinc-700 transition-colors"
+                  className="bg-zinc-800 p-2 rounded-lg border border-zinc-700 hover:bg-zinc-700 transition-colors"
                 >
                   {getStatusIcon(task.status)}
                 </button>
