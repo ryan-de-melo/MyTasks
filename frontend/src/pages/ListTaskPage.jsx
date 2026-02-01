@@ -6,6 +6,9 @@ function ListTaskPage() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(true);
+  
+  const [editingId, setEditingId] = useState(null);
+  const [titleDraft, setTitleDraft] = useState("");
 
   useEffect(() => {
     fetchTasks();
@@ -123,6 +126,39 @@ function ListTaskPage() {
     }
   }
 
+  function getNextPriority(priority) {
+    let nextPriority = null;
+    switch (priority) {
+      case "LOW":
+        nextPriority = "MEDIUM";
+        break;
+      case "MEDIUM":
+        nextPriority = "HIGH";
+        break;
+      case "HIGH":
+        nextPriority = "LOW";
+        break;
+      default:
+        nextPriority = priority;
+    }
+    return nextPriority;
+  }
+
+  async function handleTogglePriority(task) {
+    const updatedTask = {
+      ...task,
+      priority: getNextPriority(task.priority),
+    };
+
+    try {
+      await editTask(updatedTask);
+
+      setTasks((prev) => prev.map((t) => (t.id === task.id ? updatedTask : t)));
+    } catch (error) {
+      console.error("Error while updating task", error);
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-900 px-4 py-12">
       <div className="w-full max-w-md bg-zinc-800 rounded-2xl shadow-lg p-6">
@@ -151,11 +187,12 @@ function ListTaskPage() {
                     <h3 className="font-medium text-zinc-100 text-lg">
                       {task.title}
                     </h3>
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full border ${getPriorityStyle(task.priority)}`}
+                    <button
+                      onClick={() => handleTogglePriority(task)}
+                      className={`text-xs px-2 py-0.5 rounded-full border ${getPriorityStyle(task.priority)} hover:opacity-80 transition`}
                     >
                       {getPriorityLabel(task.priority)}
-                    </span>
+                    </button>
                   </div>
 
                   <p className="text-zinc-400 text-sm leading-relaxed">
@@ -183,7 +220,7 @@ function ListTaskPage() {
                 {task.deadline && (
                   <div className="flex items-center gap-1.5 ml-auto text-zinc-400">
                     <Calendar size={14} />
-                    <span>{formatDate(task.deadline)}</span>
+                    <span> Até {formatDate(task.deadline)}</span>
                   </div>
                 )}
               </div>
