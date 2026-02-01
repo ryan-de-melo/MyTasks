@@ -15,16 +15,30 @@ services:
     networks:
       - task-network
 
+  redis:
+    image: redis:7
+    container_name: redis_cache
+    ports:
+      - "6379:6379"
+    networks:
+      - task-network
+
   backend:
     build: ./backend
     container_name: backend_app
     depends_on:
       - db
+      - redis
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/mytasksdb
       SPRING_DATASOURCE_USERNAME: task_user
       SPRING_DATASOURCE_PASSWORD: task_pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+      SPRING_CACHE_TYPE: redis
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+
       API_SECURITY_TOKEN_SECRET: mytaskssupersecretkey
     ports:
       - "8080:8080"
