@@ -1,5 +1,6 @@
 package com.melo.backend.repository.dbprojections;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 import com.melo.backend.entity.Task;
@@ -15,7 +16,7 @@ public record TaskDTO(
     Instant deadline,
     TaskStatus status,
     TaskPriority priority
-) {
+) implements Serializable {
     public TaskDTO(Task task) {
         this(
             task.getId(),

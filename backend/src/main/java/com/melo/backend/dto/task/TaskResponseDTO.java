@@ -1,5 +1,6 @@
 package com.melo.backend.dto.task;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 import com.melo.backend.dto.user.UserResponseDTO;
@@ -18,7 +19,7 @@ public record TaskResponseDTO(
     Instant updatedAt,
     Instant deadline,
     UserResponseDTO user
-) {
+) implements Serializable {
     public TaskResponseDTO(Task task) {
         this(
             task.getId(),
