@@ -3,6 +3,8 @@ package com.melo.backend.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,18 +50,18 @@ public class TaskService {
         return TaskMapper.toResponse(repository.save(toAdd));
     }
 
-    
+    @CacheEvict(value = "tasks", allEntries=true)
     public TaskResponseDTO addTask(TaskCreateDTO dto) {
         User usr = authUserService.getCurrentUser();
         Task toAdd = Task.builder()
-                            .title(dto.title())
-                            .description(dto.description())
-                            .priority(dto.priority())
-                            .status(dto.status())
-                            .user(usr)
-                            .deadline(dto.deadline())
-                            .build();
-        
+                .title(dto.title())
+                .description(dto.description())
+                .priority(dto.priority())
+                .status(dto.status())
+                .user(usr)
+                .deadline(dto.deadline())
+                .build();
+
         return TaskMapper.toResponse(repository.save(toAdd));
     }
 
@@ -76,10 +78,11 @@ public class TaskService {
         return TaskMapper.toResponse(deleted);
     }
 
+    @CacheEvict(value = { "tasks", "taskById" }, allEntries=true)
     public TaskResponseDTO deleteById(Long id) throws TaskNotFoundException {
         User usr = authUserService.getCurrentUser();
         Task deleted = repository.findByIdAndUser(id, usr).orElseThrow(
-            () -> new TaskNotFoundException());
+                () -> new TaskNotFoundException());
 
         repository.deleteById(deleted.getId());
         return TaskMapper.toResponse(deleted);
@@ -89,33 +92,32 @@ public class TaskService {
      * 
      * @param id
      * @return
-    */
+     */
+    @Cacheable(value = "taskById", key = "#usr.id + ':' + #id")
     public TaskDTO getById(Long id) {
         User usr = authUserService.getCurrentUser();
 
         return repository.findByIdAndUserId(id, usr.getId()).orElseThrow(
-            () -> new TaskNotFoundException()
-        );
+                () -> new TaskNotFoundException());
     }
 
-
+    @CacheEvict(value = { "tasks", "taskById" }, allEntries=true)
     public TaskResponseDTO updateById(Long id, TaskUpdateDTO dto) {
         User usr = authUserService.getCurrentUser();
 
         Task toUpdate = repository.findByIdAndUser(id, usr).orElseThrow(
-            () -> new TaskNotFoundException()
-        );
+                () -> new TaskNotFoundException());
 
         Task newTask = Task.builder()
-                    .id(toUpdate.getId())
-                    .title(dto.title())
-                    .description(dto.description())
-                    .deadline(toUpdate.getDeadline())
-                    .createdAt(toUpdate.getCreatedAt())
-                    .priority(dto.priority())
-                    .status(dto.status())
-                    .user(usr)
-                    .build();
+                .id(toUpdate.getId())
+                .title(dto.title())
+                .description(dto.description())
+                .deadline(toUpdate.getDeadline())
+                .createdAt(toUpdate.getCreatedAt())
+                .priority(dto.priority())
+                .status(dto.status())
+                .user(usr)
+                .build();
 
         return TaskMapper.toResponse(repository.save(newTask));
     }
@@ -149,12 +151,12 @@ public class TaskService {
     }
 
     @Transactional
+    @CacheEvict(value = { "tasks", "taskById" }, allEntries=true)
     public TaskResponseDTO partialUpdateById(Long id, TaskUpdateDTO dto) {
         User usr = authUserService.getCurrentUser();
-        
+
         Task toUpdate = repository.findByIdAndUser(id, usr).orElseThrow(
-            () -> new TaskNotFoundException()
-        );
+                () -> new TaskNotFoundException());
 
         if (dto.title() != null && !dto.title().isEmpty()) {
             toUpdate.setTitle(dto.title());
@@ -174,18 +176,21 @@ public class TaskService {
 
     /**
      * Return ALL tasks registered in the system
+     * 
      * @return
      */
     public List<TaskDTO> getAllUnsafe() {
         return repository.findAllTasks();
     }
 
+    @Cacheable(value = "tasks")
     public List<TaskResponseDTO> getAll() {
+        System.out.println(">>>>>>>>>>>>>>>>>> BUSCOU NO BANCO <<<");
         User usr = authUserService.getCurrentUser();
-        
+
         return repository.findByUser(usr)
-            .stream()
-            .map(TaskResponseDTO::new)
-            .toList();
+                .stream()
+                .map(TaskResponseDTO::new)
+                .toList();
     }
 }
