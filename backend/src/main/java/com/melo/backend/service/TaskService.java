@@ -50,7 +50,7 @@ public class TaskService {
         return TaskMapper.toResponse(repository.save(toAdd));
     }
 
-    @CacheEvict(value = "tasks", allEntries=true)
+    @CacheEvict(value = "tasks", keyGenerator = "userKeyGenerator")
     public TaskResponseDTO addTask(TaskCreateDTO dto) {
         User usr = authUserService.getCurrentUser();
         Task toAdd = Task.builder()
@@ -78,7 +78,7 @@ public class TaskService {
         return TaskMapper.toResponse(deleted);
     }
 
-    @CacheEvict(value = { "tasks", "taskById" }, allEntries=true)
+    @CacheEvict(value = { "tasks", "taskById" }, keyGenerator = "userKeyGenerator")
     public TaskResponseDTO deleteById(Long id) throws TaskNotFoundException {
         User usr = authUserService.getCurrentUser();
         Task deleted = repository.findByIdAndUser(id, usr).orElseThrow(
@@ -93,7 +93,7 @@ public class TaskService {
      * @param id
      * @return
      */
-    @Cacheable(value = "taskById", key = "#usr.id + ':' + #id")
+    @Cacheable(value = "taskById", keyGenerator = "userKeyGenerator")
     public TaskDTO getById(Long id) {
         User usr = authUserService.getCurrentUser();
 
@@ -101,7 +101,7 @@ public class TaskService {
                 () -> new TaskNotFoundException());
     }
 
-    @CacheEvict(value = { "tasks", "taskById" }, allEntries=true)
+    @CacheEvict(value = { "tasks", "taskById" }, keyGenerator = "userKeyGenerator")
     public TaskResponseDTO updateById(Long id, TaskUpdateDTO dto) {
         User usr = authUserService.getCurrentUser();
 
@@ -151,7 +151,7 @@ public class TaskService {
     }
 
     @Transactional
-    @CacheEvict(value = { "tasks", "taskById" }, allEntries=true)
+    @CacheEvict(value = { "tasks", "taskById" }, keyGenerator = "userKeyGenerator")
     public TaskResponseDTO partialUpdateById(Long id, TaskUpdateDTO dto) {
         User usr = authUserService.getCurrentUser();
 
@@ -183,9 +183,8 @@ public class TaskService {
         return repository.findAllTasks();
     }
 
-    @Cacheable(value = "tasks")
+    @Cacheable(value = "tasks", keyGenerator = "userKeyGenerator")
     public List<TaskResponseDTO> getAll() {
-        System.out.println(">>>>>>>>>>>>>>>>>> BUSCOU NO BANCO <<<");
         User usr = authUserService.getCurrentUser();
 
         return repository.findByUser(usr)
