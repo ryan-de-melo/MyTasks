@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { listTasks } from "../services/taskService";
+import { listTasks, editTask } from "../services/taskService";
 import { CheckCircle2, Clock, CircleDashed, Calendar } from "lucide-react";
 
 function ListTaskPage() {
@@ -91,6 +91,38 @@ function ListTaskPage() {
     return text;
   }
 
+  function getNextStatus(status) {
+    let nextStatus = null;
+
+    switch (status) {
+      case "DONE":
+        nextStatus = "DO";
+        break;
+      case "DO":
+        nextStatus = "DOING";
+        break;
+      default:
+        nextStatus = "DONE";
+    }
+
+    return nextStatus;
+  }
+
+  async function handleToggleStatus(task) {
+    const updatedTask = {
+      ...task,
+      status: getNextStatus(task.status),
+    };
+
+    try {
+      await editTask(updatedTask);
+
+      setTasks((prev) => prev.map((t) => (t.id === task.id ? updatedTask : t)));
+    } catch (error) {
+      console.error("Error while updating task", error);
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-900 px-4 py-12">
       <div className="w-full max-w-md bg-zinc-800 rounded-2xl shadow-lg p-6">
@@ -131,9 +163,13 @@ function ListTaskPage() {
                   </p>
                 </div>
 
-                <div className="bg-zinc-800 p-2 rounded-lg border border-zinc-700">
+                <button
+                  onClick={() => handleToggleStatus(task)}
+                  className="bg-zinc-800 p-2 rounded-lg border border-zinc-700
+             hover:bg-zinc-700 transition-colors"
+                >
                   {getStatusIcon(task.status)}
-                </div>
+                </button>
               </div>
 
               <div className="mt-4 flex items-center gap-4 text-xs text-zinc-500 border-t border-zinc-800 pt-3">
