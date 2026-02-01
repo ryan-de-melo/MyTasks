@@ -1,5 +1,12 @@
-{"properties": [{
-  "name": "cors.allowed-origins",
-  "type": "java.lang.String",
-  "description": "A description for 'cors.allowed-origins'"
-}]}
+{"properties": [
+  {
+    "name": "cors.allowed-origins",
+    "type": "java.lang.String",
+    "description": "A description for 'cors.allowed-origins'"
+  },
+  {
+    "name": "api.security.token.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'api.security.token.secret'"
+  }
+]}
