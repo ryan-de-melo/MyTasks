@@ -6,7 +6,7 @@ function ListTaskPage() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(true);
-  
+
   const [editingId, setEditingId] = useState(null);
   const [titleDraft, setTitleDraft] = useState("");
 
@@ -159,6 +159,33 @@ function ListTaskPage() {
     }
   }
 
+  function startEditingTitle(task) {
+    setEditingId(task.id);
+    setTitleDraft(task.title);
+  }
+
+  function cancelEditing() {
+    setEditingId(null);
+    setTitleDraft("");
+  }
+
+  async function saveTitle(task) {
+    const updatedTask = {
+      ...task,
+      title: titleDraft,
+    };
+
+    try {
+      await editTask(updatedTask);
+
+      setTasks((prev) => prev.map((t) => (t.id === task.id ? updatedTask : t)));
+
+      setEditingId(null);
+    } catch (error) {
+      console.error("Error while updating title", error);
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-900 px-4 py-12">
       <div className="w-full max-w-md bg-zinc-800 rounded-2xl shadow-lg p-6">
@@ -184,9 +211,26 @@ function ListTaskPage() {
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1 flex-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-zinc-100 text-lg">
-                      {task.title}
-                    </h3>
+                    {editingId === task.id ? (
+                      <input
+                        value={titleDraft}
+                        onChange={(e) => setTitleDraft(e.target.value)}
+                        onBlur={() => saveTitle(task)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") saveTitle(task);
+                          if (e.key === "Escape") cancelEditing();
+                        }}
+                        autoFocus
+                        className="bg-zinc-900 text-zinc-100 text-lg font-medium rounded px-1 outline-none"
+                      />
+                    ) : (
+                      <h3
+                        onClick={() => startEditingTitle(task)}
+                        className="font-medium text-zinc-100 text-lg cursor-pointer"
+                      >
+                        {task.title}
+                      </h3>
+                    )}
                     <button
                       onClick={() => handleTogglePriority(task)}
                       className={`text-xs px-2 py-0.5 rounded-full border ${getPriorityStyle(task.priority)} hover:opacity-80 transition`}
