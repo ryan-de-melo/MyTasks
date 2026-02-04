@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { listTasks, editTask } from "../services/taskService";
 import { CheckCircle2, Clock, CircleDashed, Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function ListTaskPage() {
+  const navigate = useNavigate();
+
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(true);
@@ -27,6 +30,10 @@ function ListTaskPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleBack() {
+    navigate(-1);
   }
 
   function getPriorityStyle(priority) {
@@ -326,6 +333,14 @@ function ListTaskPage() {
             </div>
           ))}
         </div>
+
+        <button
+          type="button"
+          onClick={handleBack}
+          className="w-full mt-4 rounded-lg bg-zinc-900 py-3 font-medium text-zinc-100 hover:bg-red-500 transition-colors"
+        >
+          Voltar
+        </button>
       </div>
     </div>
   );
