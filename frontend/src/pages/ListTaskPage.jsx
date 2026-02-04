@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
-import { listTasks, editTask } from "../services/taskService";
-import { CheckCircle2, Clock, CircleDashed, Calendar } from "lucide-react";
+import { listTasks, editTask, deleteTask } from "../services/taskService";
+import {
+  CheckCircle2,
+  Clock,
+  CircleDashed,
+  Calendar,
+  Trash2,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function ListTaskPage() {
@@ -29,6 +35,22 @@ function ListTaskPage() {
       setError("Error while loading tasks");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleDelete(task) {
+    const confirmed = window.confirm(
+      `Deseja excluir a tarefa "${task.title}"?`,
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await deleteTask(task);
+
+      setTasks((prev) => prev.filter((t) => t.id !== task.id));
+    } catch (error) {
+      console.error("Error while deleting task", error);
     }
   }
 
@@ -65,7 +87,12 @@ function ListTaskPage() {
 
     switch (status) {
       case "DONE":
-        icon = <CheckCircle2 size={16} className="text-emerald-500" />;
+        icon = (
+          <CheckCircle2
+            size={16}
+            className="text-emerald-500"
+          />
+        );
         break;
       case "DOING":
         icon = <Clock size={16} className="text-indigo-500" />;
@@ -307,12 +334,29 @@ function ListTaskPage() {
                   )}
                 </div>
 
-                <button
-                  onClick={() => handleToggleStatus(task)}
-                  className="bg-zinc-800 p-2 rounded-lg border border-zinc-700 hover:bg-zinc-700 transition-colors"
-                >
-                  {getStatusIcon(task.status)}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleToggleStatus(task)}
+                    className="bg-zinc-800 p-2 rounded-lg border border-zinc-700 hover:bg-zinc-900 transition-colors"
+                    title="Alterar status"
+                  >
+                    {getStatusIcon(task.status)}
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(task)}
+                    className="bg-zinc-800 p-2 rounded-lg border border-zinc-700
+                            hover:bg-red-500 hover:border-red-500
+                            [&:hover_svg]:text-zinc-100
+                              transition-colors"
+                    title="Excluir tarefa"
+                  >
+                    <Trash2
+                      size={16}
+                      className="text-zinc-400 pointer-events-none"
+                    />
+                  </button>
+                </div>
               </div>
 
               <div className="mt-4 flex items-center gap-4 text-xs text-zinc-500 border-t border-zinc-800 pt-3">

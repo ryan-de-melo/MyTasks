@@ -16,3 +16,7 @@ export function editTask(task) {
       status: task.status,
     });
 }
+
+export function deleteTask(task) {
+    return api.delete(`/api/tasks/${task.id}`);
+}
