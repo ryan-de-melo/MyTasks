@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { createTask } from "../services/taskService";
 import { Clock } from "lucide-react"
+import { useNavigate } from "react-router-dom"; 
 
 function CreateTaskPage() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -11,6 +14,11 @@ function CreateTaskPage() {
     deadlineDate: "",
     deadlineTime: "",
   });
+
+
+  function handleBack() {
+    navigate(-1);
+  }
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -65,51 +73,62 @@ function CreateTaskPage() {
           />
 
           <div className="grid grid-cols-2 gap-4">
-            <select
-              name="priority"
-              value={form.priority}
-              onChange={handleChange}
-              className="w-full rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="HIGH">Alta</option>
-              <option value="MEDIUM">Média</option>
-              <option value="LOW">Baixa</option>
-            </select>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-zinc-400">Prioridade</label>
+              <select
+                name="priority"
+                value={form.priority}
+                onChange={handleChange}
+                className="w-full rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="HIGH">Alta</option>
+                <option value="MEDIUM">Média</option>
+                <option value="LOW">Baixa</option>
+              </select>
+            </div>
 
-            <select
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-              className="w-full rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="DO">A Fazer</option>
-              <option value="DOING">Fazendo</option>
-              <option value="DONE">Concluída</option>
-            </select>
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-zinc-400">Status</label>
+              <select
+                name="status"
+                value={form.status}
+                onChange={handleChange}
+                className="w-full rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="DO">A Fazer</option>
+                <option value="DOING">Fazendo</option>
+                <option value="DONE">Concluída</option>
+              </select>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <input
-              type="date"
-              name="deadlineDate"
-              value={form.deadlineDate}
-              onChange={handleChange}
-              className="w-full rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-
-            <div className="relative">
-              <Clock
-                size={18}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
-              />
-
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-zinc-400">Data limite</label>
               <input
-                type="time"
-                name="deadlineTime"
-                value={form.deadlineTime}
+                type="date"
+                name="deadlineDate"
+                value={form.deadlineDate}
                 onChange={handleChange}
-                className="w-full rounded-lg bg-zinc-900 border border-zinc-800 pl-2 pr-3 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full rounded-lg bg-zinc-900 border border-zinc-800 px-3 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-zinc-400">Hora limite</label>
+              <div className="relative">
+                <Clock
+                  size={18}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none"
+                />
+                <input
+                  type="time"
+                  name="deadlineTime"
+                  value={form.deadlineTime}
+                  onChange={handleChange}
+                  className="w-full rounded-lg bg-zinc-900 border border-zinc-800 pl-2 pr-3 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
             </div>
           </div>
 
@@ -119,6 +138,14 @@ function CreateTaskPage() {
             //onClick={handleSubmit}
           >
             Criar
+          </button>
+
+          <button
+            type="button"
+            onClick={handleBack}
+            className="w-full rounded-lg bg-zinc-900 py-3 font-medium text-zinc-100 hover:bg-red-500 transition-colors"
+          >
+            Voltar
           </button>
         </form>
       </div>

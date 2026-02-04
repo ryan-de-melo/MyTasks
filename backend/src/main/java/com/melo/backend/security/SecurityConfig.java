@@ -24,7 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     @Value("${cors.allowed-origins}")
-    private String[] allowedOrigins;
+    private String allowedOrigins;
 
     @Autowired
     private SecurityFilter securityFilter;
